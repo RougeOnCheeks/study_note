@@ -678,4 +678,58 @@ File[] hiddenFiles = new File(&quot;.&quot;).listFiles(new FileFilter() {
 //자바 8
 //메서드 참조 :: - &#x27;이 메서드를 값으로 사용하라&#x27; 는 의미
 
-File[] hiddenFiles = new File(&quot;.&quot;).listFiles(File::isHidden);</code></pre><ul id="1a65b68f-1fdc-4c12-b02b-dd8f05d716a5" class="bulleted-list"><li style="list-style-type:disc">이미 isHidden이라는 <span style="border-bottom:0.05em solid">함수</span>는 준비되어 있으므로 메서드 참조를 이용해서 listFiles에 직접 전달할 수 있다.</li></ul><ul id="7a5b0375-f6f5-4992-beaa-b80264194edd" class="bulleted-list"><li style="list-style-type:disc">자바 8에서는 메서드가 이급값이 아닌 일급값이다.</li></ul><ul id="427698c0-9359-4e82-a484-0592b40ff539" class="bulleted-list"><li style="list-style-type:disc">기존에 객체 참조 object reference(new로 객체 참조를 생성함)를 이용해서 객체를 주고받았던 것처럼 자바8에서는 File::isHidden을 이용해서 메서드 참조를 만들어 전달할 수 있게 되었다.</li></ul><h3 id="c5863af3-cc02-406a-86ac-523726ab492f" class="">람다 : 익명함수</h3><ul id="d5a7385c-a3f0-4893-b97d-ed19301462aa" class="bulleted-list"><li style="list-style-type:disc">자바 8에서는 기명 named 메서드를 일급값으로 취급할 뿐 아니라 람다(또는 익명함수 anonymous functions)를 포함하여 함수도 값으로 취급할 수 있다.</li></ul><ul id="074648b2-df3e-4605-9933-e9b5983c7b4f" class="bulleted-list"><li style="list-style-type:disc"><code>(int x) -&gt; x + 1</code> : x 라는 인수로 호출하면 x + 1을 반환</li></ul></div></article></body></html>
+File[] hiddenFiles = new File(&quot;.&quot;).listFiles(File::isHidden);</code></pre><ul id="1a65b68f-1fdc-4c12-b02b-dd8f05d716a5" class="bulleted-list"><li style="list-style-type:disc">이미 isHidden이라는 <span style="border-bottom:0.05em solid">함수</span>는 준비되어 있으므로 메서드 참조를 이용해서 listFiles에 직접 전달할 수 있다.</li></ul><ul id="7a5b0375-f6f5-4992-beaa-b80264194edd" class="bulleted-list"><li style="list-style-type:disc">자바 8에서는 메서드가 이급값이 아닌 일급값이다.</li></ul><ul id="427698c0-9359-4e82-a484-0592b40ff539" class="bulleted-list"><li style="list-style-type:disc">기존에 객체 참조 object reference(new로 객체 참조를 생성함)를 이용해서 객체를 주고받았던 것처럼 자바8에서는 File::isHidden을 이용해서 메서드 참조를 만들어 전달할 수 있게 되었다.</li></ul><h3 id="c5863af3-cc02-406a-86ac-523726ab492f" class="">람다 : 익명함수</h3><ul id="d5a7385c-a3f0-4893-b97d-ed19301462aa" class="bulleted-list"><li style="list-style-type:disc">자바 8에서는 기명 named 메서드를 일급값으로 취급할 뿐 아니라 람다(또는 익명함수 anonymous functions)를 포함하여 함수도 값으로 취급할 수 있다.</li></ul><ul id="074648b2-df3e-4605-9933-e9b5983c7b4f" class="bulleted-list"><li style="list-style-type:disc"><code>(int x) -&gt; x + 1</code> : x 라는 인수로 호출하면 x + 1을 반환</li></ul><h2 id="a1787b6d-8ed9-48bf-a67e-071d79cfb05d" class="">1.3.2 코드 넘겨주기 : 예제</h2><h3 id="d25791ba-9fce-4c34-9e6f-f4fc148ef147" class="">자바 8 이전</h3><pre id="1f8e076f-c312-4841-bf26-bfbe4ac280aa" class="code"><code>//자바 8 이전
+//Apple 클래스와 getColor 메서드가 있고, Apples 리스트를 포함하는 변수 inventory가 있다고 가정
+//모든 녹색 사과를 선택해서 리스트를 반환(필터)하는 메서드
+public static List&lt;Apple&gt; filterGreenApples(List&lt;Apple&gt; inventory) {
+  List&lt;Apple&gt; result = new ArrayList&lt;&gt;();
+  for (Apple apple : inventory) {
+    if (&quot;green&quot;.equals(apple.getColor())) {
+      result.add(apple);
+    }
+  }
+  return result;
+}</code></pre><ul id="e8adafbe-a5dc-4ace-9153-28c0463f783f" class="bulleted-list"><li style="list-style-type:disc">만약 사과를 무게로 필터링 하고 싶을 경우, 위 코드를 그대로 복사&amp;붙여넣기 해서 apple.getWeight() &gt; 150으로 변경하는 코드를 짜게 된다.</li></ul><ul id="2ea3ccbd-0978-4092-be0b-e267627d6849" class="bulleted-list"><li style="list-style-type:disc">필터 filter: 특정 항목을 선택해서 반환하는 동작</li></ul><h3 id="31408233-92ee-449f-ad4f-abb46ad2aec6" class="">자바 8 이후</h3><pre id="8cc4bc2c-8d24-444b-ac96-8f8d8e6d458c" class="code"><code>//자바 8 이후
+public static boolean isGreenApple(Apple apple) {
+  return &quot;green&quot;.equals(apple.getColor());
+}
+
+public static boolean isHeavyApple(Apple apple) {
+  return apple.getWeight() &gt; 150;
+}
+
+public interface Predicate&lt;T&gt; {
+	boolean test(T t);
+}
+
+static List&lt;Apple&gt; filterApples(List&lt;Apple&gt; inventory, Predicate&lt;Apple&gt; p){
+	List&lt;Apple&gt; result = new ArrayList&lt;&gt;();
+	for(Apple apple : inventory){
+		if(p.test(apple)){
+			result.add(apple);
+		}
+	}
+	return result;
+}
+
+//아래 코드로 메서드 호출 가능
+filterApples(inventory, Apple::isGreenApple);
+
+filterApples(inventory, Apple::isHeavyApple);</code></pre><p id="18567680-4ed7-494d-a444-9b5919ac5473" class="">
+</p><ul id="aab810be-c7c8-4bb0-b83c-52528d0fd30b" class="bulleted-list"><li style="list-style-type:square">프리디케이트 predicate<ul id="2e5edd59-e4e1-4767-8826-6c6a89e246a9" class="bulleted-list"><li style="list-style-type:square">수학에서 인수로 값을 받아 true 혹은 false를 반환하는 함수를 프레디케이트라고 한다.</li></ul><ul id="8f49b338-5a14-4b58-b81f-976c2463c338" class="bulleted-list"><li style="list-style-type:square">Function&lt;Apple, Boolean&gt;과 같이 코드를 구현할 수도 있지만 Predicate&lt;Apple&gt;을 사용하는 것이 더 표준적인 방식이다.</li></ul></li></ul><h2 id="0d41beb8-cce6-45f1-98c6-578fdb47cf73" class="">1.3.3 메서드 전달에서 람다로</h2><ul id="15673669-52f3-436e-8ec1-c66d114d7e87" class="bulleted-list"><li style="list-style-type:disc">메서드를 값으로 전달하는 것은 유용한 기능이지만, 한두번만 사용할 메서드를 매번 정의하는것은 효율적이지 못하다.</li></ul><ul id="95b17833-a741-439d-9287-67a591d70162" class="bulleted-list"><li style="list-style-type:disc">자바 8에서는 익명함수 또는 람다 라는 개념을 이용하여 이 문제를 해결할 수 있다.</li></ul><pre id="1797ca4c-60e1-45d7-8e4e-80d5da3be662" class="code"><code>filterApples(inventory, (Apple a) -&gt; GREEN.equals(a.getColor()) );
+
+filterApples(inventory, (Apple a) -&gt; a.getWeight() &gt; 150);
+
+filterApples(inventory, (Apple a) -&gt; a.getWeight() &lt; 80 || RED.equals(a.getColor()) );</code></pre><ul id="60447327-2478-4f8a-a7bb-184595318c9b" class="bulleted-list"><li style="list-style-type:disc">하지만 람다가 몇 줄이상으로 길어진다면 익명 람다보다는 메서드를 정의하고 메서드 참조를 활용하는 것이 바람직하다. 코드의 명확성이 우선시되어야 한다.</li></ul><ul id="89f5226a-6dc9-4773-a147-3f0702ff5dc1" class="bulleted-list"><li style="list-style-type:disc">멀티코어 CPU로 변화해감에 따라 filter와 비슷한 동작을 수행하는 연산집합을 포함하는 새로운 스트림 API(컬렉션과 비슷하며 함수형 프로그래머에게 더 익숙한 API)를 제공한다.</li></ul><ul id="25a743c6-f9eb-47df-a405-26584c072d21" class="bulleted-list"><li style="list-style-type:disc">컬렉션과 스트림 간에 변환할 수 있는 메서드인 map, reduce등 도 제공한다.</li></ul><h1 id="7218f976-f693-45c9-80fc-171501f5f02d" class="">1.4 스트림</h1><ul id="f5423189-ee04-4ba0-8f8f-8db1eba2154a" class="bulleted-list"><li style="list-style-type:disc">거의 모든 자바 애플리케이션은 컬렉션을 만들고 활용한다.</li></ul><ul id="4bc6be05-ec6c-4892-bb14-b6bd5b9b712f" class="bulleted-list"><li style="list-style-type:disc">외부반복 external iteration: 컬렉션에서는 반복과정을 직접 처리해야 함. for-each 루프를 이용해서 각 요소를 반복하면서 작업을 수행.</li></ul><ul id="f816b605-29b4-4eca-9f98-1c9f07c5f940" class="bulleted-list"><li style="list-style-type:disc">내부반복 internal iteration: 스트림 API에서는 라이브러리 내부에서 모든 데이터가 처리됨</li></ul><p id="28014730-b7c8-4fb7-bf3c-9c7711973ce3" class="">
+</p><ul id="b33651cc-b33d-4cb5-9369-5950d06dd53c" class="bulleted-list"><li style="list-style-type:square">멀티코어 컴퓨터<ul id="84c901bc-3e4f-45d0-867d-14e3218f4f66" class="bulleted-list"><li style="list-style-type:square">전통적인 자바 프로그램은 넷 또는 여덟개 이상의 CPU(코어) 중 하나만 사용하면서 나머지 CPU를 낭비시키는 것이 문제였음</li></ul><ul id="c7dc35b4-2d9e-454e-a986-42bd83f03d73" class="bulleted-list"><li style="list-style-type:square">자바 8에서는 이러한 멀티코어 컴퓨터를 잘 활용할 수 있는 새로운 프로그래밍 스타일을 제공한다.</li></ul><p id="646513f1-96e3-455e-94b6-e77d6b7d7fa9" class="">
+</p></li></ul><h2 id="7674830b-19f9-4115-9cf1-25a522a95fc3" class="">1.4.1 멀티스레딩은 어렵다</h2><ul id="0e84ec73-7528-43b5-9ca4-18a0bdd7708f" class="bulleted-list"><li style="list-style-type:disc">이전 자바 버전에서 제공하는 스레드 API로 멀티스레딩 코드를 구현해서 병렬성을 이용하는 것은 쉽지 않다.</li></ul><ul id="8224475f-ef2c-407c-b04f-053fd3e5c2d7" class="bulleted-list"><li style="list-style-type:disc">멀티스레딩 환경에서 각각의 스레드는 동시에 공유된 데이터에 접근하고, 데이터를 갱신할 수 있으므로 스레드를 잘 제어하지 못하면 원치않는 방식으로 데이터가 바뀔 수가 있다.</li></ul><ul id="56c0f834-231b-46fa-acb2-610dbc31e142" class="bulleted-list"><li style="list-style-type:disc">자바 8에서는 스트림 API(java.util.stream)로 ‘컬렉션을 처리하면서 발생하는 모호함과 반복적인 코드 문제&#x27; 그리고 ‘멀티코어 활용 어려움&#x27;이라는 두가지 문제를 모두 해결했다.</li></ul><ul id="49130a9f-b4a5-4630-9142-8a0c0d415154" class="bulleted-list"><li style="list-style-type:disc">데이터를 처리할 때 반복되는 패턴을 라이브러리가 제공<ul id="fb6618d2-5098-4079-925f-b299b0113892" class="bulleted-list"><li style="list-style-type:circle">필터링 filtering</li></ul><ul id="d3b88c78-1005-4f5b-bee4-cdc3c948329f" class="bulleted-list"><li style="list-style-type:circle">추출 extracting</li></ul><ul id="5edec91a-35ad-4291-8aee-3398385e5fcd" class="bulleted-list"><li style="list-style-type:circle">그룹화 grouping</li></ul></li></ul><ul id="50bd2124-f5ff-495a-93b1-dfaed6a25f3f" class="bulleted-list"><li style="list-style-type:disc">이러한 동작들을 쉽게 병렬화 가능<ul id="eec21148-f5c4-47e8-9665-0d05d4c2cbc1" class="bulleted-list"><li style="list-style-type:circle">포킹단계 forking step: 여러개의 CPU가 리스트를 필터링할때 리스트의 앞부분과 뒷부분을 나누어 처리하도록 요청하고 결과를 합친다.</li></ul><ul id="fe468222-94ae-4895-bc6c-b9105a9c6a54" class="bulleted-list"><li style="list-style-type:circle">컬렉션은 어떻게 데이터를 저장하고 접근할지에 중점을 두는 반면, 스트림은 데이터에 어떤 계산을 할 것인지 묘사하는것에 둔다</li></ul></li></ul><ul id="6795ffd6-37af-4e67-a5e8-15bcf7f2f106" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">스트림은 스트림 내의 요소를 쉽게 병렬로 처리할 수 있는 환경을 제공</span>한다는 것이 핵심</li></ul><ul id="75e8d4b3-0772-47fd-b372-98712f897a48" class="bulleted-list"><li style="list-style-type:disc">컬렉션을 필터링할 수 있는 가장 빠른 방법은 컬렉션을 스트림으로 바꾸고, 병렬로 처리한 다음에, 리스트로 다시 복원하는 것</li></ul><pre id="37932f2b-137a-496e-bb1f-d07b92d291c5" class="code"><code>import static java.util.stream.Collectors.toList;
+
+//순차 처리 방식
+List&lt;Apple&gt; heavyApples = inventory.stream()
+														.filter((Apple a) -&gt; a.getWeight() &gt; 150)
+														.collect(toList());
+
+//병렬 처리 방식
+List&lt;Apple&gt; heavyApples = inventory.parallelStream()
+														.filter((Apple a) -&gt; a.getWeight() &gt; 150)
+														.collect(toList());</code></pre><ul id="5ae08c48-973e-4124-8417-02b9ceff0553" class="bulleted-list"><li style="list-style-type:disc">자바 8에서는 라이브러리에서 분할을 처리한다. 즉 , 큰 스트림을 병렬로 처리할 수 있도록 작은 스트림으로 분할한다.</li></ul><ul id="f5358be9-cf6b-4f03-91c2-f6a27fb42352" class="bulleted-list"><li style="list-style-type:disc">또한 filter와 같은 라이브러리 메서드로 전달된 메서드가 상호작용하지 않는다면 가변 공유 객체를 통해 공짜로 병렬성을 누릴 수 있다.</li></ul><ul id="e3774281-72d7-46c8-accc-96df84a61e01" class="bulleted-list"><li style="list-style-type:disc"></li></ul></div></article></body></html>
